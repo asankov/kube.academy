@@ -1,0 +1,18 @@
+image:
+  repository: bitnami/jenkins
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: latest
+
+jenkinsUsername: "Anton Sankov"
+jenkinsPassword: ""
+
+containerPorts:
+  - name: http
+    port: 8080
+  - name: https
+    port: 443
+
+service:
+  type: NodePort
+  nodePort: 30080

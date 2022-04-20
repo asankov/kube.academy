@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kubeacademy.fullname" . }}
+spec:
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: bitnami/jenkins:latest
+        image: {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
+        env:
+          - name: "JENKINS_USERNAME"
+            value: {{ default "test" .Values.jenkinsUsername | quote }}
+          - name: "JENKINS_PASSWORD"
+            {{- if .Values.jenkinsPassword }}
+            value: {{ .Values.jenkinsPassword }}
+            {{- else }}
+            value: testPassword
+            {{- end}}
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        {{- range .Values.containerPorts }}
+        - name: {{ .name }}
+          port: {{ .port }}
+        {{- end}}
